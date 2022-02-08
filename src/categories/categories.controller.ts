@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { Category } from './schema/category.schema';
@@ -14,9 +14,10 @@ export class CategoriesController {
 
   @Post()
   createCategory(
+    @Res() res,
     @Body() createCategoryDto: CreateCategoryDto,
     //in the future add the connection with the User
   ): Promise<Category> {
-    return this.categoriesService.createCategory(createCategoryDto);
+    return this.categoriesService.createCategory(createCategoryDto, res);
   }
 }
