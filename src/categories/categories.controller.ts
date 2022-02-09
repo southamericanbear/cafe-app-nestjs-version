@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -35,7 +36,7 @@ export class CategoriesController {
     @Param('id') id: string,
     @Body() createCategoryDto: CreateCategoryDto,
     @Res() res,
-  ) {
+  ): Promise<void> {
     const { name } = createCategoryDto;
     return this.categoriesService.updateCategory(id, name, res);
   }
@@ -47,5 +48,10 @@ export class CategoriesController {
     //in the future add the connection with the User
   ): Promise<Category> {
     return this.categoriesService.createCategory(createCategoryDto, res);
+  }
+
+  @Delete('/:id')
+  deleteCategory(@Param('id') id: string, @Res() res): Promise<void> {
+    return this.categoriesService.deleteCategory(id, res);
   }
 }

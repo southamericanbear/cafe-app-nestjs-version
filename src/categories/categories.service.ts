@@ -145,4 +145,13 @@ export class CategoriesService {
       });
     }
   }
+
+  async deleteCategory(id: string, res): Promise<void> {
+    try {
+      await this.categoryModel.findByIdAndUpdate(id, { state: false });
+      return res.status(200).json({ msg: 'Category successfully deleted' });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
