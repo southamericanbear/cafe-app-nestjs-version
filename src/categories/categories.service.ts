@@ -43,6 +43,61 @@ export class CategoriesService {
     return this.categoryModel.find();
   }
 
+  async getCategoryById(id: string, res): Promise<Category> {
+    const categoryDB = await this.categoryModel.findById(id);
+    if (categoryDB && !categoryDB.state) {
+      return res.status(400).json({
+        msg: `Category ${categoryDB.name} is not available`,
+      });
+    }
+
+    if (!categoryDB) {
+      return res.status(404).json({
+        msg: "Category doesn't exists",
+      });
+    }
+
+    try {
+      //Needs to populate in the future
+      const result = await this.categoryModel.findById(id);
+      res.status(200).json({
+        result,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async updateCategory(id: string, name: string, res) {
+    if (!name.length || name.length < 3) {
+      return res.status(400).json({
+        msg: 'Name should be at least 3 characters long',
+      });
+    }
+
+    const categoryDB = await this.categoryModel.findOne({
+      name: name.toUpperCase(),
+    });
+
+    if (categoryDB && categoryDB.state) {
+      return res.status(400).json({
+        msg: `Category ${name} already exists`,
+      });
+    }
+
+    try {
+      await this.categoryModel.findByIdAndUpdate(id, {
+        name: name.toUpperCase(),
+      });
+
+      res.status(200).json({
+        msg: 'Category updated',
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async createCategory(
     createCategoryDto: CreateCategoryDto,
     res,

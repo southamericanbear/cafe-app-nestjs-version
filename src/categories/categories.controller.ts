@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Res,
+} from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { PaginationCategoryDto } from './dto/pagination-category.dto';
@@ -14,6 +23,21 @@ export class CategoriesController {
     @Query() paginationCategoryDto: PaginationCategoryDto,
   ): Promise<Category[]> {
     return this.categoriesService.getCategories(paginationCategoryDto, res);
+  }
+
+  @Get('/:id')
+  getCategoryById(@Param('id') id: string, @Res() res): Promise<Category> {
+    return this.categoriesService.getCategoryById(id, res);
+  }
+
+  @Patch('/:id')
+  updateCategory(
+    @Param('id') id: string,
+    @Body() createCategoryDto: CreateCategoryDto,
+    @Res() res,
+  ) {
+    const { name } = createCategoryDto;
+    return this.categoriesService.updateCategory(id, name, res);
   }
 
   @Post()
